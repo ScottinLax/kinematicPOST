@@ -1,10 +1,10 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
-// UBLOX(M8P,M8T)‚ÌóM‹@ŠÏ‘ªƒf[ƒ^‚ğ—˜—p‚µ‚½RTK‚Ì‰‰Z
+// UBLOX(M8P,M8T)ã®å—ä¿¡æ©Ÿè¦³æ¸¬ãƒ‡ãƒ¼ã‚¿ã‚’åˆ©ç”¨ã—ãŸRTKã®æ¼”ç®—
 // GPS/QZSS L1, GALILEO E1, BeiDou B1, GLONASS G1
 //
 //		ver.1.4
-//
+// æ–½å’ 2020.11.24
 /////////////////////////////////////////////////////////////////////////////////
 
 #include <stdio.h>
@@ -16,111 +16,111 @@
 using namespace std;
 
 int main(){
-	int iter;//“Ç‚İ‚İ‰ñ”
-	int rcvn;//rcvn=1iŠî€‘¤j@rcvn=0iˆÚ“®‘¤j
-	int pos=1;//H
+	int iter;//èª­ã¿è¾¼ã¿å›æ•°
+	int rcvn;//rcvn=1ï¼ˆåŸºæº–å´ï¼‰ã€€rcvn=0ï¼ˆç§»å‹•å´ï¼‰
+	int pos=1;//ï¼Ÿ
 	int rover_kaisu=0;
 	End_flag = 0;
 
 	cout.precision(7);
-	Sol_flag[0]=0;Sol_flag[1]=0;Sol_flag[2]=0;//ˆÚ“®‘¤‚Ì“Ç‚İ‚İ‰ñ”A’P“Æ‘ªˆÊ‰ñ”ARTK‚ÌFIX‰ñ”
+	Sol_flag[0]=0;Sol_flag[1]=0;Sol_flag[2]=0;//ç§»å‹•å´ã®èª­ã¿è¾¼ã¿å›æ•°ã€å˜ç‹¬æ¸¬ä½å›æ•°ã€RTKã®FIXå›æ•°
 
-	set_initial_value();//‰Šúİ’è{ƒtƒ@ƒCƒ‹İ’è
-//	cout << "GPSTIME" << " " << "Ref" << " " << "Rov" << " " << "‘S‰ñ”" << " " << "‘ªˆÊ‰ñ”" << " " << "FIX‰ñ”" << endl;
+	set_initial_value();//åˆæœŸè¨­å®šï¼‹ãƒ•ã‚¡ã‚¤ãƒ«è¨­å®š
+//	cout << "GPSTIME" << " " << "Ref" << " " << "Rov" << " " << "å…¨å›æ•°" << " " << "æ¸¬ä½å›æ•°" << " " << "FIXå›æ•°" << endl;
 	printf("  GPSTIME    RefSAT RovSAT      ALLcount     POSTcount     FIXcount\n");
 
 	fprintf(fp[3], "GPSTIME,SATn,e,n,u,Latitude,Longitude,Height,HDOP,VDOP,MinSvNum,Clock_ext,Clock5,Clock6,Clock7,PRN,\n");
 	fprintf(fp[4], "GPSTIME,dLongitude,dLatitude,dHeight,Longitude,Latitude,Height,SATn,\n");
 	fprintf(fp[5], "GPSTIME,e,n,u,dLongitude,dLatitude,dHeight,Longitude,Latitude,Height,Ratio,SATn...,\n");
 
-	for(iter=1;iter<=Iteration;iter++){//İ’è‰ñ”•ª“Ç‚İ‚Ş
+	for(iter=1;iter<=Iteration;iter++){//è¨­å®šå›æ•°åˆ†èª­ã¿è¾¼ã‚€
 
-		rcvn = 1;//1:Šî€‘¤ 0:ˆÚ“®‘¤
-		read_data(rcvn);//ŠÏ‘ªƒf[ƒ^Aq–@ƒƒbƒZ[ƒW‚Ì“Ç‚İ‚İ
+		rcvn = 1;//1:åŸºæº–å´ 0:ç§»å‹•å´
+		read_data(rcvn);//è¦³æ¸¬ãƒ‡ãƒ¼ã‚¿ã€èˆªæ³•ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®èª­ã¿è¾¼ã¿
 
-		if(End_flag==1){//ƒtƒ@ƒCƒ‹“Ç‚İ‚İÅŒã‚Å‹­§I—¹
+		if(End_flag==1){//ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿æœ€å¾Œã§å¼·åˆ¶çµ‚äº†
 			iter = Iteration;continue;
 		}
 
-		calc_satpos(rcvn);//ƒGƒtƒFƒƒŠƒX‚©‚ç‚Ì‰q¯ˆÊ’uŒvZ
-		calc_direction(rcvn,iter);//‹ÂŠpE•ûˆÊŠpŒvZiŠî€‘¤‚È‚Ì‚Åƒ†[ƒUˆÊ’u‚ÍŒÅ’è‚ÌŠî€ˆÊ’u‚ÅŒvZj
-		calc_iono_model(rcvn);//“d—£‘wƒ‚ƒfƒ‹‚Å‚Ì“d—£‘w’x‰„—ÊŒvZ
-		calc_tropo(rcvn);//‘Î—¬Œ—’x‰„—ÊŒvZ
+		calc_satpos(rcvn);//ã‚¨ãƒ•ã‚§ãƒ¡ãƒªã‚¹ã‹ã‚‰ã®è¡›æ˜Ÿä½ç½®è¨ˆç®—
+		calc_direction(rcvn,iter);//ä»°è§’ãƒ»æ–¹ä½è§’è¨ˆç®—ï¼ˆåŸºæº–å´ãªã®ã§ãƒ¦ãƒ¼ã‚¶ä½ç½®ã¯å›ºå®šã®åŸºæº–ä½ç½®ã§è¨ˆç®—ï¼‰
+		calc_iono_model(rcvn);//é›»é›¢å±¤ãƒ¢ãƒ‡ãƒ«ã§ã®é›»é›¢å±¤é…å»¶é‡è¨ˆç®—
+		calc_tropo(rcvn);//å¯¾æµåœé…å»¶é‡è¨ˆç®—
 
-		Glo_Num=0;Gps_Num=0;Gal_Num=0;Bei_Num=0;//Še‰q¯ƒVƒXƒeƒ€‚Ì”‚ğ‰Šú‰»
-		choose_sat(rcvn,iter);//‰q¯‘I‘ğ
+		Glo_Num=0;Gps_Num=0;Gal_Num=0;Bei_Num=0;//å„è¡›æ˜Ÿã‚·ã‚¹ãƒ†ãƒ ã®æ•°ã‚’åˆæœŸåŒ–
+		choose_sat(rcvn,iter);//è¡›æ˜Ÿé¸æŠ
 		
-		//’P“Æ‘ªˆÊ‚ğs‚¤iGPS‰q¯‚ª4‹@ˆÈã‚ ‚é‚±‚Æ‚ª‘O’ñj
-		POS=1;//’P“Æ‘ªˆÊ
+		//å˜ç‹¬æ¸¬ä½ã‚’è¡Œã†ï¼ˆGPSè¡›æ˜ŸãŒ4æ©Ÿä»¥ä¸Šã‚ã‚‹ã“ã¨ãŒå‰æï¼‰
+		POS=1;//å˜ç‹¬æ¸¬ä½
 		if(SATn[rcvn]>=MinSvNum && Gps_Num>=4){
-			calc_pos(rcvn,iter,pos);//Å¬“ñæ–@‚Å‚Ì’P“Æ‘ªˆÊ
-			calc_satpos(rcvn);//óM‹@ƒNƒƒbƒNŒë·‚É‚æ‚è‹[—‹——£‚ª•Ï‚í‚é‚½‚ßAÄ“x”­Ë‚ğÄŒvZ‚µA‰q¯ˆÊ’u‚àÄŒvZ‚·‚é
-			calc_pos2(rcvn,iter,pos);//­‚µC³‚µ‚½‰q¯ˆÊ’u‚Å‚Ì’P“Æ‘ªˆÊÄŒvZ
+			calc_pos(rcvn,iter,pos);//æœ€å°äºŒä¹—æ³•ã§ã®å˜ç‹¬æ¸¬ä½
+			calc_satpos(rcvn);//å—ä¿¡æ©Ÿã‚¯ãƒ­ãƒƒã‚¯èª¤å·®ã«ã‚ˆã‚Šæ“¬ä¼¼è·é›¢ãŒå¤‰ã‚ã‚‹ãŸã‚ã€å†åº¦ç™ºå°„æ™‚åˆ»ã‚’å†è¨ˆç®—ã—ã€è¡›æ˜Ÿä½ç½®ã‚‚å†è¨ˆç®—ã™ã‚‹
+			calc_pos2(rcvn,iter,pos);//å°‘ã—ä¿®æ­£ã—ãŸè¡›æ˜Ÿä½ç½®ã§ã®å˜ç‹¬æ¸¬ä½å†è¨ˆç®—
 		}
 
-		//RTK‚É“ü‚éê‡ˆÚ“®‘¤‚ÌŠÏ‘ªƒf[ƒ^‚ğ“Ç‚İ‚İA‚ğ”äŠriŠî€‘¤‚ÆˆÚ“®‘¤j‚µ‚ÄRTK‚Ì‰‰Z‚Öi‚Ş
+		//RTKã«å…¥ã‚‹å ´åˆç§»å‹•å´ã®è¦³æ¸¬ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã¿ã€æ™‚åˆ»ã‚’æ¯”è¼ƒï¼ˆåŸºæº–å´ã¨ç§»å‹•å´ï¼‰ã—ã¦RTKã®æ¼”ç®—ã¸é€²ã‚€
 		if(RTK == 1){
-			rcvn=0;//1:Šî€‘¤ 0:ˆÚ“®‘¤
+			rcvn=0;//1:åŸºæº–å´ 0:ç§»å‹•å´
 			if(GPSTIME>=604000)
 				GPSTIME=GPSTIME-604800;
 			
-			//Šî€‹ÇŠÏ‘ªƒf[ƒ^‚Ì‚ÆˆÚ“®‹ÇŠÏ‘ªƒf[ƒ^‚Ì‚ğ”äŠr‚µ“Ç‚İ‚Ş
+			//åŸºæº–å±€è¦³æ¸¬ãƒ‡ãƒ¼ã‚¿ã®æ™‚åˆ»ã¨ç§»å‹•å±€è¦³æ¸¬ãƒ‡ãƒ¼ã‚¿ã®æ™‚åˆ»ã‚’æ¯”è¼ƒã—èª­ã¿è¾¼ã‚€
 			while((GPSTIME-DGPSTIME)>0.05 || rover_kaisu==0){
-				read_data(0);//ˆÚ“®‘¤ŠÏ‘ªƒf[ƒ^‚Ì“Ç‚İ‚İ
+				read_data(0);//ç§»å‹•å´è¦³æ¸¬ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 				rover_kaisu++;
 			}
 
-			//”»’fˆ—•”•ª
-//			if(fabs(GPSTIME - DGPSTIME) < 0.1 && SATn[1]>=0){//“¯‚¶GPS
-			while(DGPSTIME-GPSTIME >= -0.005 && DGPSTIME-GPSTIME <= 0.995){//Šî€‘¤‚ª1HzAˆÚ“®‘¤‚ª5Hz‚È‚Ç‚Ì‚Æ‚«
-				read_data(0);//while‚Ì‚Æ‚«‚¾‚¯
+			//æ™‚åˆ»åˆ¤æ–­å‡¦ç†éƒ¨åˆ†
+//			if(fabs(GPSTIME - DGPSTIME) < 0.1 && SATn[1]>=0){//åŒã˜GPSæ™‚åˆ»
+			while(DGPSTIME-GPSTIME >= -0.005 && DGPSTIME-GPSTIME <= 0.995){//åŸºæº–å´ãŒ1Hzã€ç§»å‹•å´ãŒ5Hzãªã©ã®ã¨ã
+				read_data(0);//whileã®ã¨ãã ã‘
 				int i;
 
 				rover_kaisu++;
-				Sol_flag[0]++;//ˆÚ“®‘¤‚Ì‘S‰ñ”ƒJƒEƒ“ƒg
+				Sol_flag[0]++;//ç§»å‹•å´ã®å…¨å›æ•°ã‚«ã‚¦ãƒ³ãƒˆ
 
-				calc_satpos(0);///ƒGƒtƒFƒƒŠƒX‚©‚ç‚Ì‰q¯ˆÊ’uŒvZ
-				calc_direction(0,iter);//‹ÂŠpE•ûˆÊŠpŒvZiˆÚ“®‘¤‚È‚Ì‚Åƒ†[ƒUˆÊ’u‚ğŠî€j
-				calc_iono_model(rcvn);//“d—£‘wƒ‚ƒfƒ‹‚Å‚Ì“d—£‘w’x‰„—ÊŒvZ
-				calc_tropo(0);//‘Î—¬Œ—’x‰„—Ê‚ÌŒvZ
+				calc_satpos(0);///ã‚¨ãƒ•ã‚§ãƒ¡ãƒªã‚¹ã‹ã‚‰ã®è¡›æ˜Ÿä½ç½®è¨ˆç®—
+				calc_direction(0,iter);//ä»°è§’ãƒ»æ–¹ä½è§’è¨ˆç®—ï¼ˆç§»å‹•å´ãªã®ã§ãƒ¦ãƒ¼ã‚¶ä½ç½®ã‚’åŸºæº–ï¼‰
+				calc_iono_model(rcvn);//é›»é›¢å±¤ãƒ¢ãƒ‡ãƒ«ã§ã®é›»é›¢å±¤é…å»¶é‡è¨ˆç®—
+				calc_tropo(0);//å¯¾æµåœé…å»¶é‡ã®è¨ˆç®—
 
 				Glo_Num=0;Gps_Num=0;Gal_Num=0;Bei_Num=0;
-				choose_sat(0,iter);//‰q¯‘I‘ğ
+				choose_sat(0,iter);//è¡›æ˜Ÿé¸æŠ
 
-				//ˆÚ“®‘¤‚Ì’P“Æ‘ªˆÊ‚ğs‚¤iGPS‰q¯‚ª4‹@ˆÈã‚ ‚é‚±‚Æ‚ª‘O’ñj
-				POS=1;//’P“Æ‘ªˆÊ
+				//ç§»å‹•å´ã®å˜ç‹¬æ¸¬ä½ã‚’è¡Œã†ï¼ˆGPSè¡›æ˜ŸãŒ4æ©Ÿä»¥ä¸Šã‚ã‚‹ã“ã¨ãŒå‰æï¼‰
+				POS=1;//å˜ç‹¬æ¸¬ä½
 				if(SATn[rcvn]>=MinSvNum && Gps_Num>=4){
-					calc_pos(rcvn,iter,pos);//Å¬“ñæ–@‚Å‚Ì’P“Æ‘ªˆÊ
-					calc_satpos(rcvn);//óM‹@ƒNƒƒbƒNŒë·‚É‚æ‚è‹[—‹——£‚ª•Ï‚í‚é‚½‚ßAÄ“x”­Ë‚ğÄŒvZ‚µA‰q¯ˆÊ’u‚àÄŒvZ‚·‚é
-					calc_pos2(rcvn,iter,pos);//­‚µC³‚µ‚½‰q¯ˆÊ’u‚Å‚Ì’P“Æ‘ªˆÊÄŒvZ
-					Sol_flag[1]++;//’P“Æ‘ªˆÊ‚Ì‰ñ”ƒJƒEƒ“ƒg
+					calc_pos(rcvn,iter,pos);//æœ€å°äºŒä¹—æ³•ã§ã®å˜ç‹¬æ¸¬ä½
+					calc_satpos(rcvn);//å—ä¿¡æ©Ÿã‚¯ãƒ­ãƒƒã‚¯èª¤å·®ã«ã‚ˆã‚Šæ“¬ä¼¼è·é›¢ãŒå¤‰ã‚ã‚‹ãŸã‚ã€å†åº¦ç™ºå°„æ™‚åˆ»ã‚’å†è¨ˆç®—ã—ã€è¡›æ˜Ÿä½ç½®ã‚‚å†è¨ˆç®—ã™ã‚‹
+					calc_pos2(rcvn,iter,pos);//å°‘ã—ä¿®æ­£ã—ãŸè¡›æ˜Ÿä½ç½®ã§ã®å˜ç‹¬æ¸¬ä½å†è¨ˆç®—
+					Sol_flag[1]++;//å˜ç‹¬æ¸¬ä½ã®å›æ•°ã‚«ã‚¦ãƒ³ãƒˆ
 				}
 
-				//RTK‚ğs‚¤•”•ª(GPS/QZS/GALILEO‚Ìê‡)@‚ ‚í‚¹‚ÄDGNSS‚às‚¤
+				//RTKã‚’è¡Œã†éƒ¨åˆ†(GPS/QZS/GALILEOã®å ´åˆ)ã€€ã‚ã‚ã›ã¦DGNSSã‚‚è¡Œã†
 				if(SATn[rcvn]>=5 && Bei_Num==0 && Glo_Num==0)
 					calc_rtk_GQE(rcvn);
 
-				//RTK‚ğs‚¤•”•ª(GPS/QZS/GALILEO+BeiDou‚Ìê‡)@‚ ‚í‚¹‚ÄDGNSS‚às‚¤
+				//RTKã‚’è¡Œã†éƒ¨åˆ†(GPS/QZS/GALILEO+BeiDouã®å ´åˆ)ã€€ã‚ã‚ã›ã¦DGNSSã‚‚è¡Œã†
 				if(SATn[rcvn]>=6 && Gps_Num+Gal_Num>=2 && Bei_Num>=2 && Gps_Num>=2)
 					calc_rtk_GQEB(rcvn);
 
-				//RTK‚ğs‚¤•”•ª(GPS/QZS/GALILEO+GLONASS‚Ìê‡)@‚ ‚í‚¹‚ÄDGNSS‚às‚¤
+				//RTKã‚’è¡Œã†éƒ¨åˆ†(GPS/QZS/GALILEO+GLONASSã®å ´åˆ)ã€€ã‚ã‚ã›ã¦DGNSSã‚‚è¡Œã†
 				if(SATn[rcvn]>=6 && Gps_Num+Gal_Num>=2 && Glo_Num>=2 && Gps_Num>=2)
 					calc_rtk_GQER(rcvn);
 
-			}//Šî€‹Ç‚É‚ ‚í‚¹‚½ˆÚ“®‘¤‚Ìƒ^ƒCƒ~ƒ“ƒO‚Å‚Ìif‚Ü‚½‚Íwhile•¶‚ÌI‚í‚è
+			}//åŸºæº–å±€æ™‚åˆ»ã«ã‚ã‚ã›ãŸç§»å‹•å´ã®ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã§ã®ifã¾ãŸã¯whileæ–‡ã®çµ‚ã‚ã‚Š
 
-		}//DGNSS{RTK
+		}//DGNSSï¼‹RTK
 
-		if (((int)iter % 1) == 0 && GPSTIME >= -0.1 && DGPSTIME >= -0.1)//“r’†Œo‰ß‚Ì‘‚«o‚µ
+		if (((int)iter % 1) == 0 && GPSTIME >= -0.1 && DGPSTIME >= -0.1)//é€”ä¸­çµŒéã®æ›¸ãå‡ºã—
 	//		cout << GPSTIME << " " << SATn[1] << " " << SATn[0] << " " << Sol_flag[0] << " " << Sol_flag[1] << " " << Sol_flag[2] << endl;
 			printf("%10.4f     %3d    %3d    %10d    %10d   %10d\n", GPSTIME, SATn[1], SATn[0], Sol_flag[0], Sol_flag[1], Sol_flag[2]);
 
 		
-	}//‚±‚±‚Ü‚Å‚ªŒJ‚è•Ô‚µŒvZ•”
+	}//ã“ã“ã¾ã§ãŒç¹°ã‚Šè¿”ã—è¨ˆç®—éƒ¨
 
 
-	file_close(RTK);//ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é
+	file_close(RTK);//ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹
 	
 	printf("push Enter key.\n");
 	getchar();
